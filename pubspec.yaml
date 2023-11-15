@@ -1,7 +1,7 @@
 name: csn_printer_sdk
-description: A new Flutter plugin project.
+description: Csn printer sdk .
 version: 0.0.1
-homepage:
+homepage: https://github.com/sartajroshan/csn_printer_sdk_flutter
 
 environment:
   sdk: '>=3.1.5 <4.0.0'
