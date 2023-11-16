@@ -15,7 +15,7 @@ PlatformException _createConnectionError(String channelName) {
   );
 }
 
-enum State {
+enum PrintState {
   success,
   error,
 }
@@ -32,7 +32,7 @@ class PrintResult {
     required this.message,
   });
 
-  State state;
+  PrintState state;
 
   String message;
 
@@ -46,7 +46,7 @@ class PrintResult {
   static PrintResult decode(Object result) {
     result as List<Object?>;
     return PrintResult(
-      state: State.values[result[0]! as int],
+      state: PrintState.values[result[0]! as int],
       message: result[1]! as String,
     );
   }

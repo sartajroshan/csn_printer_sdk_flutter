@@ -1,8 +1,8 @@
+import 'package:csn_printer_sdk/csn_printer_sdk.dart';
 import 'package:flutter/material.dart';
 import 'dart:async';
 
 import 'package:flutter/services.dart';
-import 'package:csn_printer_sdk/csn_printer_sdk.dart';
 
 void main() {
   runApp(const MyApp());
@@ -16,34 +16,64 @@ class MyApp extends StatefulWidget {
 }
 
 class _MyAppState extends State<MyApp> {
-  String _platformVersion = 'Unknown';
-  final _csnPrinterSdkPlugin = CsnPrinterSdk();
+  String status = 'Unknown';
+  final _csnPrinterSdkPlugin = CsnPrinterSdkPlugin();
 
   @override
   void initState() {
     super.initState();
-    initPlatformState();
   }
 
-  // Platform messages are asynchronous, so we initialize in an async method.
-  Future<void> initPlatformState() async {
-    String platformVersion;
-    // Platform messages may fail, so we use a try/catch PlatformException.
-    // We also handle the message potentially returning null.
+  Future<void> startPrinting() async {
     try {
-         await _csnPrinterSdkPlugin.makePrinterReady();
+         final  isReady = await _csnPrinterSdkPlugin.makePrinterReady();
+         setState(() {
+           status = isReady == true ? 'Printer Ready' : 'Printer Not ready';
+         });
+
+         if(isReady ?? false) {
+          final result = await _csnPrinterSdkPlugin.print([
+             PrintInputData(
+               dataType: PrintInputDataType.text,
+               inputText: PrintInputText(pszString: "Invoice Copy\r\n", nLan: 0, nOrgx: 96, nWidthTimes: 1, nHeightTimes: 1, nFontType: 0, nFontStyle: 0)
+             ),
+             PrintInputData(
+                 dataType: PrintInputDataType.feedLine,
+             ),
+             PrintInputData(
+                 dataType: PrintInputDataType.text,
+                 inputText: PrintInputText(pszString: "Receipt: 270500027719 Cashier: 010121212122121", nLan: 0, nOrgx: 0, nWidthTimes: 0, nHeightTimes: 0, nFontType: 0, nFontStyle: 0)
+             ),
+            PrintInputData(
+              dataType: PrintInputDataType.feedLine,
+            ),
+             PrintInputData(
+                 dataType: PrintInputDataType.text,
+                 inputText: PrintInputText(pszString: "----------------------------------------------", nLan: 0, nOrgx: 0, nWidthTimes: 0, nHeightTimes: 0, nFontType: 0, nFontStyle: 0)
+             ),
+            PrintInputData(
+              dataType: PrintInputDataType.feedLine,
+            ),
+             PrintInputData(
+                 dataType: PrintInputDataType.qrCode,
+                 inputQrCode: PrintInputQrCode(strCodedata: "https://google.com", nWidthX: 10, nVersion: 1, nErrorCorrectionLevel: 1),
+             ),
+            PrintInputData(
+              dataType: PrintInputDataType.feedLine,
+            ),
+           ]);
+
+          setState(() {
+            status = result?.state == PrintState.success ? 'Successfully printed' : '${result?.message}';
+          });
+         }
+
     } on PlatformException {
-      platformVersion = 'Failed to get platform version.';
+      setState(() {
+        status = 'platform exc';
+      });
     }
 
-    // If the widget was removed from the tree while the asynchronous platform
-    // message was in flight, we want to discard the reply rather than calling
-    // setState to update our non-existent appearance.
-    if (!mounted) return;
-
-    setState(() {
-      _platformVersion = 'platformVersion';
-    });
   }
 
   @override
@@ -54,7 +84,14 @@ class _MyAppState extends State<MyApp> {
           title: const Text('Plugin example app'),
         ),
         body: Center(
-          child: Text('Running on: $_platformVersion\n'),
+          child: Column(
+            children: [
+              Text(status),
+              TextButton(onPressed: (){
+                startPrinting();
+              }, child: const Text("Print")),
+            ],
+          ),
         ),
       ),
     );

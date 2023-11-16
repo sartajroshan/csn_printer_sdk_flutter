@@ -42,12 +42,12 @@ class FlutterError (
   val details: Any? = null
 ) : Throwable()
 
-enum class State(val raw: Int) {
+enum class PrintState(val raw: Int) {
   SUCCESS(0),
   ERROR(1);
 
   companion object {
-    fun ofRaw(raw: Int): State? {
+    fun ofRaw(raw: Int): PrintState? {
       return values().firstOrNull { it.raw == raw }
     }
   }
@@ -67,14 +67,14 @@ enum class PrintInputDataType(val raw: Int) {
 
 /** Generated class from Pigeon that represents data sent in messages. */
 data class PrintResult (
-  val state: State,
+  val state: PrintState,
   val message: String
 
 ) {
   companion object {
     @Suppress("UNCHECKED_CAST")
     fun fromList(list: List<Any?>): PrintResult {
-      val state = State.ofRaw(list[0] as Int)!!
+      val state = PrintState.ofRaw(list[0] as Int)!!
       val message = list[1] as String
       return PrintResult(state, message)
     }

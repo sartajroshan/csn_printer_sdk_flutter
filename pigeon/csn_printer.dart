@@ -9,11 +9,11 @@ import 'package:pigeon/pigeon.dart';
   //copyrightHeader: 'pigeon/copyright.txt',
   dartPackageName: 'csn_printer_sdk',
 ))
-enum State { success, error }
+enum PrintState { success, error }
 enum PrintInputDataType { text, qrCode, feedLine }
 
 class PrintResult {
-  final State state;
+  final PrintState state;
   final String message;
   PrintResult(this.state, this.message);
 }

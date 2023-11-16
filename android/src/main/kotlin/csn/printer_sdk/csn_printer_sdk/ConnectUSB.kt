@@ -260,11 +260,11 @@ class ConnectUSB :
                 ).show()
                 if(bPrintResult >= 0) {
                     if (printCallback != null) {
-                        printCallback!!(PrintResult(State.SUCCESS, Prints.resultCodeToString(bPrintResult)  ))
+                        printCallback!!(PrintResult(PrintState.SUCCESS, Prints.resultCodeToString(bPrintResult)  ))
                     }
                 } else {
                     if (printCallback != null) {
-                        printCallback!!(PrintResult(State.ERROR, Prints.resultCodeToString(bPrintResult)  ))
+                        printCallback!!(PrintResult(PrintState.ERROR, Prints.resultCodeToString(bPrintResult)  ))
                     }
                 }
                 //mActivity!!.btnPrint!!.isEnabled = bIsOpened
