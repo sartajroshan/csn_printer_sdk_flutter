@@ -35,6 +35,7 @@ class ConnectUSB :
     private var printCallback: ((PrintResult) -> Unit)? = null
     private var disconnectCallback: ((Boolean) -> Unit)? = null
     private  var  printData: List<PrintInputData>? = null
+    private var deviceIterator: Iterator<UsbDevice>? = null
 
 
     fun setActivity(activity: Activity?) {
@@ -91,11 +92,14 @@ class ConnectUSB :
     private fun probe() {
         val mUsbManager = mActivity!!.getSystemService(USB_SERVICE) as UsbManager
         val deviceList = mUsbManager.deviceList
-        val deviceIterator: Iterator<UsbDevice> = deviceList.values.iterator()
+        if(deviceIterator == null) {
+            deviceIterator = deviceList.values.iterator()
+        }
+
         if (deviceList.size > 0) {
             // 初始化选择对话框布局，并添加按钮和事件
-            if (deviceIterator.hasNext()) { // 这里是if不是while，说明我只想支持一种device
-                val device = deviceIterator.next()
+            if (deviceIterator!!.hasNext()) { // 这里是if不是while，说明我只想支持一种device
+                val device = deviceIterator!!.next()
                 //Toast.makeText( this, device.toString(), Toast.LENGTH_SHORT).show();
 
                 val mPermissionIntent = PendingIntent
@@ -285,6 +289,7 @@ class ConnectUSB :
     }
 
     override fun OnOpen() {
+        deviceIterator = null
         mActivity!!.runOnUiThread {
             Toast.makeText(mActivity, "Connected", Toast.LENGTH_SHORT).show()
             if(readyCallback != null) {
@@ -294,15 +299,23 @@ class ConnectUSB :
     }
 
     override fun OnOpenFailed() {
-        mActivity!!.runOnUiThread {
-            Toast.makeText(mActivity, "Failed", Toast.LENGTH_SHORT).show()
-            if(readyCallback != null) {
-                readyCallback!!(false)
+        if(deviceIterator?.hasNext() == true) {
+            mActivity!!.runOnUiThread {
+                Toast.makeText(mActivity, "Checking device", Toast.LENGTH_SHORT).show()
+            }
+            probe()
+        } else {
+            mActivity!!.runOnUiThread {
+                Toast.makeText(mActivity, "Failed", Toast.LENGTH_SHORT).show()
+                if(readyCallback != null) {
+                    readyCallback!!(false)
+                }
             }
         }
     }
 
     override fun OnClose() {
+        deviceIterator = null
         if(disconnectCallback != null) {
             disconnectCallback!!(true)
         }
