@@ -59,6 +59,10 @@ object Prints {
                                                 printInputData.inputText.nFontStyle.toInt()
                                             )
                                         }
+
+                                        PrintInputDataType.ALIGNMENT -> {
+                                            pos.POS_S_Align(printInputData.align!!.toInt())
+                                        }
                                     }
                                 }
                                 pos.POS_FeedLine()

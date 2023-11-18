@@ -56,7 +56,8 @@ enum class PrintState(val raw: Int) {
 enum class PrintInputDataType(val raw: Int) {
   TEXT(0),
   QRCODE(1),
-  FEEDLINE(2);
+  FEEDLINE(2),
+  ALIGNMENT(3);
 
   companion object {
     fun ofRaw(raw: Int): PrintInputDataType? {
@@ -91,7 +92,8 @@ data class PrintResult (
 data class PrintInputData (
   val dataType: PrintInputDataType,
   val inputText: PrintInputText? = null,
-  val inputQrCode: PrintInputQrCode? = null
+  val inputQrCode: PrintInputQrCode? = null,
+  val align: Long? = null
 
 ) {
   companion object {
@@ -104,7 +106,8 @@ data class PrintInputData (
       val inputQrCode: PrintInputQrCode? = (list[2] as List<Any?>?)?.let {
         PrintInputQrCode.fromList(it)
       }
-      return PrintInputData(dataType, inputText, inputQrCode)
+      val align = list[3].let { if (it is Int) it.toLong() else it as Long? }
+      return PrintInputData(dataType, inputText, inputQrCode, align)
     }
   }
   fun toList(): List<Any?> {
@@ -112,6 +115,7 @@ data class PrintInputData (
       dataType.raw,
       inputText?.toList(),
       inputQrCode?.toList(),
+      align,
     )
   }
 }

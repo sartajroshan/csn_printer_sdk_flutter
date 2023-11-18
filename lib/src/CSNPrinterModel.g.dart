@@ -24,6 +24,7 @@ enum PrintInputDataType {
   text,
   qrCode,
   feedLine,
+  alignment,
 }
 
 class PrintResult {
@@ -57,6 +58,7 @@ class PrintInputData {
     required this.dataType,
     this.inputText,
     this.inputQrCode,
+    this.align,
   });
 
   PrintInputDataType dataType;
@@ -65,11 +67,14 @@ class PrintInputData {
 
   PrintInputQrCode? inputQrCode;
 
+  int? align;
+
   Object encode() {
     return <Object?>[
       dataType.index,
       inputText?.encode(),
       inputQrCode?.encode(),
+      align,
     ];
   }
 
@@ -83,6 +88,7 @@ class PrintInputData {
       inputQrCode: result[2] != null
           ? PrintInputQrCode.decode(result[2]! as List<Object?>)
           : null,
+      align: result[3] as int?,
     );
   }
 }

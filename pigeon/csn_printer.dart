@@ -10,7 +10,7 @@ import 'package:pigeon/pigeon.dart';
   dartPackageName: 'csn_printer_sdk',
 ))
 enum PrintState { success, error }
-enum PrintInputDataType { text, qrCode, feedLine }
+enum PrintInputDataType { text, qrCode, feedLine, alignment }
 
 class PrintResult {
   final PrintState state;
@@ -22,7 +22,7 @@ class PrintInputData {
   PrintInputDataType dataType;
   PrintInputText? inputText;
   PrintInputQrCode? inputQrCode;
-
+  int? align;
   PrintInputData(this.dataType, this.inputText, this.inputQrCode);
 }
 

@@ -33,6 +33,10 @@ class _MyAppState extends State<MyApp> {
 
          if(isReady ?? false) {
           final result = await _csnPrinterSdkPlugin.print([
+            PrintInputData(
+                dataType: PrintInputDataType.alignment,
+              align: 1
+            ),
              PrintInputData(
                dataType: PrintInputDataType.text,
                inputText: PrintInputText(pszString: "Invoice Copy\r\n", nLan: 0, nOrgx: 96, nWidthTimes: 1, nHeightTimes: 1, nFontType: 0, nFontStyle: 0)
@@ -40,6 +44,10 @@ class _MyAppState extends State<MyApp> {
              PrintInputData(
                  dataType: PrintInputDataType.feedLine,
              ),
+            PrintInputData(
+                dataType: PrintInputDataType.alignment,
+                align: 0
+            ),
              PrintInputData(
                  dataType: PrintInputDataType.text,
                  inputText: PrintInputText(pszString: "Receipt: 270500027719 Cashier: 010121212122121", nLan: 0, nOrgx: 0, nWidthTimes: 0, nHeightTimes: 0, nFontType: 0, nFontStyle: 0)
