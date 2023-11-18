@@ -1,3 +1,7 @@
+## 0.0.4
+
+* align method added.
+
 ## 0.0.3
 
 * check for all usb devices added.
